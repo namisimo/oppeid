@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>17. Mai på Oppeid 🇳🇴</title>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #fff, #e0f0ff);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #002b45;
+      text-align: center;
+    }
+    header {
+      background-color: #ba0c2f;
+      color: white;
+      padding: 30px 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3em;
+    }
+    section {
+      padding: 30px 20px;
+    }
+    h2 {
+      color: #ba0c2f;
+      margin-bottom: 10px;
+    }
+    .program, .info {
+      max-width: 700px;
+      margin: auto;
+      text-align: left;
+      background: #ffffffdd;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 10px #ccc;
+      margin-bottom: 40px;
+    }
+    .program p, .info p, .info li {
+      margin: 8px 0;
+      font-size: 1.1em;
+    }
+    .info ul {
+      padding-left: 20px;
+    }
+    .lotteri {
+      background: #f0f8ff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ddd;
+      max-width: 600px;
+      margin: auto;
+    }
+    button {
+      background: #0065bd;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 25px;
+      font-size: 1.2em;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #ba0c2f;
+    }
+    .reset {
+      padding: 5px 10px;
+      font-size: 1.1em;
+      background-color: #888;
+    }
+    #result {
+      font-size: 2em;
+      color: #d7141a;
+      margin-top: 20px;
+    }
+    footer {
+      background-color: #002b45;
+      color: white;
+      padding: 20px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🇳🇴 17. Mai-feiring på Oppeid 🇳🇴</h1>
+    <p>Gratulerer med dagen!</p>
+  </header>
+
+  <section class="program">
+    <h2>Dagens program</h2>
+    <p><strong>10:30</strong> – Gudstjeneste i Hamarøy kirke</p>
+    <p><strong>11:10</strong> – Fellessang og tale ved minnesteinen (ved Marit Gjølgali)</p>
+    <p><strong>11:20</strong> – 17. maitoget starter</p>
+    <p><strong>11:50</strong> – Ungdomsappell ved Hamarøy Bygdeheim (ved Jade Avin Kristoffersen og Ingrid Dahlberg Kristoffersen)</p>
+    <p><strong>12:00</strong> – Feiring i Hamarøyhallen</p>
+    <ul>
+      <li>Konferansier: Charlotte Elsbak</li>
+      <li>Kake, kaffe, pølser, is og brus</li>
+      <li>Leker for barna</li>
+      <li>Tale for dagen ved Johannes Sandberg</li>
+      <li>Tale fra russen ved russepresident Madelen Fagerstrand</li>
+      <li>Underholdning ved kulturskolen</li>
+      <li>Allsang</li>
+    </ul>
+  </section>
+
+  <section class="info">
+    <h2>💰 Inngang og kakebord</h2>
+    <p><strong>Voksne:</strong> 150 kr (inkluderer kakebord, kaffe/te)</p>
+    <p><strong>Barn/ungdom til og med 18 år og russ:</strong> Gratis!</p>
+    <p><strong>NB:</strong> Det trekkes lodd på billetten!</p>
+    <p>Betaling med Vipps og bankkort</p>
+  </section>
+
+  <section class="lotteri">
+    <h2>🎟️ Lotteri – Trykk for å trekke en vinner!</h2>
+    <button onclick="generateLuckyCode()">🎉</button>
+    <button class="reset" onclick="resetLottery()" title="Nullstill lotteri">🔁</button>
+    <div id="result"></div>
+    <div id="history">
+      <h3>Tidligere vinnere:</h3>
+      <div id="history-list"></div>
+    </div>
+  </section>
+
+  <footer>
+    Takk for at du feirer nasjonaldagen sammen med oss! 🇳🇴
+  </footer>
+
+  <script>
+    const winningNumbers = [];
+    const emojis = ['🇳🇴','🎈','🎉','🎊','🥳','🍰','🎂','👑','👗','🎺','🚩','🌸','💐'];
+
+    function generateLuckyCode() {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const letter = letters[Math.floor(Math.random() * letters.length)];
+      const number = Math.floor(Math.random() * 999) + 1;
+      const lucky = letter + number;
+      winningNumbers.unshift(lucky);
+      document.getElementById('result').textContent = `🎈 Vinneren er: ${lucky} 🇳🇴`;
+
+      const historyList = document.getElementById('history-list');
+      historyList.innerHTML = '';
+      winningNumbers.forEach((code, index) => {
+        const div = document.createElement('div');
+        div.textContent = `${emojis[index % emojis.length]} ${code}`;
+        historyList.appendChild(div);
+      });
+    }
+
+    function resetLottery() {
+      winningNumbers.length = 0;
+      document.getElementById('result').textContent = '';
+      document.getElementById('history-list').innerHTML = '';
+    }
+  </script>
+
+</body>
+</html>

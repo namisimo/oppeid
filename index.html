@@ -22,6 +22,12 @@
       margin: 0;
       font-size: 3em;
     }
+    .videobox {
+      background-color: #ffffff22;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+    }
     section {
       padding: 30px 20px;
     }
@@ -90,6 +96,14 @@
   <header>
     <h1>🇳🇴 17. Mai-feiring på Oppeid 🇳🇴</h1>
     <p>Gratulerer med dagen!</p>
+    <div class="videobox">
+      <p>📺 Se video fra fjorårets feiring:</p>
+      <div class="fb-video" 
+        data-href="https://www.facebook.com/watch/?v=1158949076034416" 
+        data-width="500" 
+        data-show-text="false">
+      </div>
+    </div>
   </header>
 
   <section class="program">
@@ -132,6 +146,12 @@
   <footer>
     Takk for at du feirer nasjonaldagen sammen med oss! 🇳🇴
   </footer>
+
+  <!-- Facebook SDK for JavaScript -->
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous" 
+    src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0" nonce="17maiOppeid">
+  </script>
 
   <script>
     const winningNumbers = [];

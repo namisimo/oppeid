@@ -37,6 +37,21 @@
     .lotteri h2 {
       color: #ba0c2f;
     }
+    .input-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .input-row label {
+      font-weight: bold;
+    }
+    .input-row input {
+      padding: 5px;
+      width: 80px;
+      text-align: center;
+    }
     button {
       background: #0065bd;
       color: white;
@@ -51,8 +66,6 @@
       background: #ba0c2f;
     }
     .reset {
-      padding: 5px 10px;
-      font-size: 1.1em;
       background-color: #888;
     }
     #result {
@@ -67,6 +80,11 @@
       font-size: 1.3em;
       color: #003b5c;
     }
+    #ticket-count {
+      font-size: 1.2em;
+      color: #003b5c;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -77,39 +95,103 @@
   </header>
 
   <section class="lotteri">
-    <h2>🎟️ Lotteri – Trykk for å trekke en vinner!</h2>
-    <button onclick="generateLuckyCode()">🎉</button>
-    <button class="reset" onclick="resetLottery()" title="Nullstill lotteri">🔁</button>
+    <h2>🎟️ Lotteri – Registrer loddsalg</h2>
+    <div class="input-row">
+      <label for="rangeA">A:</label>
+      <input type="text" id="rangeA" placeholder="1-100">
+      <label for="rangeG">G:</label>
+      <input type="text" id="rangeG" placeholder="1-100">
+      <label for="rangeM">M:</label>
+      <input type="text" id="rangeM" placeholder="1-100">
+      <label for="rangeL">L:</label>
+      <input type="text" id="rangeL" placeholder="1-100">
+    </div>
+    <button onclick="generateTickets()">✅ Registrer loddsalg</button>
+    <div id="ticket-count">Ingen lodd registrert enda.</div>
+  </section>
+
+  <section class="lotteri">
+    <h2>🎉 Trekk én og én vinner (maks 4)</h2>
+    <button onclick="drawOneWinner()">🎯 Trekk én vinner</button>
+    <button class="reset" onclick="resetLottery()">🔁 Nullstill</button>
     <div id="result"></div>
     <div id="history">
-      <h3>🇳🇴 Tidligere vinnere 🇳🇴</h3>
+      <h3>🇳🇴 Vinnere 🇳🇴</h3>
       <div id="history-list"></div>
     </div>
   </section>
 
   <script>
-    const winningNumbers = [];
-    const emojis = ['🇳🇴','🎈','🎉','🎊','🥳','🍰','🎂','👑','👗','🎺','🚩','🌸','💐'];
+    let allTickets = [];
+    let drawnWinners = [];
+    const emojis = ['🇳🇴','🎈','🎉','🎊','🥳','🍰','🎂','👑'];
 
-    function generateLuckyCode() {
-      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      const letter = letters[Math.floor(Math.random() * letters.length)];
-      const number = Math.floor(Math.random() * 999) + 1;
-      const lucky = letter + number;
-      winningNumbers.unshift(lucky);
-      document.getElementById('result').textContent = `🎈 Vinneren er: ${lucky} 🇳🇴`;
+    function parseRange(letter, rangeStr) {
+      const match = rangeStr.match(/^(\d+)\s*-\s*(\d+)$/);
+      if (!match) return [];
+
+      const start = parseInt(match[1]);
+      const end = parseInt(match[2]);
+      const list = [];
+
+      for (let i = start; i <= end; i++) {
+        list.push(`${letter}${i}`);
+      }
+      return list;
+    }
+
+    function generateTickets() {
+      allTickets = [];
+
+      const aTickets = parseRange('A', document.getElementById('rangeA').value);
+      const gTickets = parseRange('G', document.getElementById('rangeG').value);
+      const mTickets = parseRange('M', document.getElementById('rangeM').value);
+      const lTickets = parseRange('L', document.getElementById('rangeL').value);
+
+      allTickets = [...aTickets, ...gTickets, ...mTickets, ...lTickets];
+
+      drawnWinners = [];
+      document.getElementById('result').textContent = '';
+      document.getElementById('history-list').innerHTML = '';
+
+      const ticketCount = allTickets.length;
+      document.getElementById('ticket-count').textContent = 
+        ticketCount > 0 
+        ? `Totalt antall solgte lodd: ${ticketCount}` 
+        : "Ingen gyldige lodd registrert.";
+    }
+
+    function drawOneWinner() {
+      if (drawnWinners.length >= 4) {
+        alert("Fire vinnere er allerede trukket.");
+        return;
+      }
+
+      const remaining = allTickets.filter(ticket => !drawnWinners.includes(ticket));
+      if (remaining.length === 0) {
+        alert("Ingen flere lodd å trekke fra.");
+        return;
+      }
+
+      const winner = remaining[Math.floor(Math.random() * remaining.length)];
+      drawnWinners.push(winner);
+
+      document.getElementById('result').textContent = `🎊 Trukket: ${winner}`;
 
       const historyList = document.getElementById('history-list');
-      historyList.innerHTML = '';
-      winningNumbers.forEach((code, index) => {
-        const div = document.createElement('div');
-        div.textContent = `${emojis[index % emojis.length]} ${code}`;
-        historyList.appendChild(div);
-      });
+      const div = document.createElement('div');
+      div.textContent = `${emojis[drawnWinners.length % emojis.length]} ${winner}`;
+      historyList.appendChild(div);
     }
 
     function resetLottery() {
-      winningNumbers.length = 0;
+      allTickets = [];
+      drawnWinners = [];
+      document.getElementById('rangeA').value = '';
+      document.getElementById('rangeG').value = '';
+      document.getElementById('rangeM').value = '';
+      document.getElementById('rangeL').value = '';
+      document.getElementById('ticket-count').textContent = 'Ingen lodd registrert enda.';
       document.getElementById('result').textContent = '';
       document.getElementById('history-list').innerHTML = '';
     }
